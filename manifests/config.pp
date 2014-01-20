@@ -42,6 +42,11 @@ class smokeping::config {
     $path_smokemail = $smokeping::path_smokemail
     $path_tmail     = $smokeping::path_tmail
 
+    #create config.d directory, assumptions are made below that it exists
+    file { '/etc/smokeping/config.d':
+        ensure  => directory,
+    }
+
     File {
         owner => root,
         group => root,
@@ -113,7 +118,7 @@ class smokeping::config {
                         file {
                             $smokeping::slave_secrets:
                                 ensure => present,
-                                owner  => smokeping,
+                                owner  => $daemon_user,
                                 group  => $webserver_group,
                                 mode   => '0640';
                         }

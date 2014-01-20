@@ -7,8 +7,14 @@ class smokeping::install {
     if ! defined (Package['fping']) {
         package {'fping': ensure => installed; }
     }
-    if ! defined (Package['perl-doc']) {
-        package {'perl-doc': ensure => installed; }
+
+    case $operatingsystem {
+        'Debian', 'Ubuntu': { $perldoc_package = 'perl-doc' }
+        default: { $perldoc_package = 'perl' } #typically perldoc comes with perl
+    }
+
+    if ! defined (Package[$perldoc_package]) {
+        package {$perldoc_package: ensure => installed; }
     }
 
     # correct permissions
